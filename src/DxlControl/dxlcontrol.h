@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <QtMath>
-#include "dynamixel_sdk.h"
+#include "dynamixel_sdk/dynamixel_sdk.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -29,6 +29,8 @@ enum { current_mode = 0, velocity_mode, position_mode = 3, extended_position_mod
 #define ADDR_PROFILE_VELOCITY		112
 #define ADDR_PROFILE_ACCELERATION	108
 #define ADDR_POSITION_P_GAIN		84
+#define ADDR_POSITION_I_GAIN        82
+#define ADDR_POSITION_D_GAIN        80
 
 // Lenght address
 #define LEN_PRESENT_POSITION	4
@@ -39,10 +41,13 @@ enum { current_mode = 0, velocity_mode, position_mode = 3, extended_position_mod
 #define PROTOCOL_VERSION    2.0
 
 #define BAUDRATE    4000000
-#define DEVICENAME  "COM3"
+#define DEVICENAME  "/dev/ttyUSB0"
 
-#define ADDR_BR_4M  6
-#define ADDR_BR_45M 7
+#define BR_DF  	1
+#define BR_1M  	3
+#define BR_2M	4
+#define BR_4M  	6
+#define BR_45M 	7
 
 #define TORQUE_ENABLE   1
 #define TORQUE_DISABLE  0
@@ -61,6 +66,7 @@ public:
 	void init();
 	int dxl_init(uint8_t ID);
 	void dxl_deinit(uint8_t ID, int32_t home_pos);
+	void dxl_deinit(uint8_t ID);
 
 	void setLEDon(uint8_t ID);
 	void setLEDoff(uint8_t ID);
@@ -80,10 +86,12 @@ public:
 	dynamixel::PortHandler *portHandler;
 	dynamixel::PacketHandler *packetHandler;
 	dynamixel::GroupSyncRead *groupSyncReadPos;
-	dynamixel::GroupSyncRead *groupSyncReadVel;
-
-	const double POSITION_UNIT = 0.088;	// [deg]
-	const double VELOCITY_UNIT = 0.229;	// [RPM]
+    dynamixel::GroupSyncRead *groupSyncReadVel;
 private:
 };
+
+const double POSITION_UNIT = 0.088;	// [deg]
+const double VELOCITY_UNIT = 0.229;	// [RPM]
+const double DEG2RAD = M_PI/180.0;
+const double RAD2DEG = 180.0/M_PI;
 

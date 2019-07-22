@@ -19,6 +19,7 @@ public:
     RobotArm(uint numbody, uint DOF);
     ~RobotArm();
     void run_kinematics();
+    void run_kinematics(double *q, double *des_pose);
     void run_inverse_kinematics();
     void run_inverse_kinematics(double* cur_joint, double* des_pose, double* res_joint, double* res_pose);
 

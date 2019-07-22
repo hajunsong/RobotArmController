@@ -136,6 +136,21 @@ void RobotArm::run_kinematics()
     fclose(fp);
 }
 
+void RobotArm::run_kinematics(double *q, double *des_pose){
+    for(int i = 0; i < 6; i++){
+        body[i+1].qi = q[i];
+    }
+
+    kinematics();
+
+    des_pose[0] = body[6].re[0];
+    des_pose[1] = body[6].re[1];
+    des_pose[2] = body[6].re[2];
+    des_pose[3] = body[6].roll;
+    des_pose[4] = body[6].pitch;
+    des_pose[5] = body[6].yaw;
+}
+
 void RobotArm::run_inverse_kinematics() {
     sprintf(file_name, "../data/hj_inverse_kinematics_result.txt");
     fp = fopen(file_name, "w+");
@@ -209,6 +224,9 @@ void RobotArm::run_inverse_kinematics(double* input_q, double* des_pose, double*
     for(uint i = 1; i <= 6; i++){
         cur_joint[i - 1] = body[i].qi;
     }
+
+    kinematics();
+
     cur_pose[0] = body[6].re[0];
     cur_pose[1] = body[6].re[1];
     cur_pose[2] = body[6].re[2];
